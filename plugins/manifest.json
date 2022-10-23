@@ -19,6 +19,10 @@
         {
             "name": "devutils",
             "url": "https://raw.githubusercontent.com/DylanBruner/TermProject/master/plugins/official/devutils.py"
+        },
+        {
+            "name": "corepackage",
+            "url": "https://raw.githubusercontent.com/DylanBruner/TermProject/master/plugins/official/corepackage.py"
         }
     ]
 }
