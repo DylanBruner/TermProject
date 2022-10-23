@@ -23,6 +23,10 @@
         {
             "name": "corepackage",
             "url": "https://raw.githubusercontent.com/DylanBruner/TermProject/master/plugins/official/corepackage.py"
+        },
+        {
+            "name": "pyshell",
+            "url": "https://raw.githubusercontent.com/DylanBruner/TermProject/master/plugins/official/pyshell.py"
         }
     ]
 }
