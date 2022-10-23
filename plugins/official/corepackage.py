@@ -13,13 +13,9 @@ class CorePackage(object):
         self.version = "0.1"
         self.author = "Dylan Bruner"
         self.description = "Install the most commonly used plugins with one command"
-        self.hooks = {
-            hooks.before_command: self.before_command,
-        }
+        self.hooks = {}
 
         self.plugins = ['devutils', 'termtheme', 'moresuggestions', 'poke']
-
-        print(f"[CorePackage] run '!installcore' to install")
 
     def _on_load(self, terminal: Terminal):
         print(f"[CorePackage] Installing core plugins")
@@ -28,6 +24,8 @@ class CorePackage(object):
             if plugin['name'] in self.plugins:
                 pluginStore.installPluginFromUrl(plugin, terminal)
     
+
+        terminal.get_plugin('pluginapi.py').unload_plugin('corepackage.py', terminal)
         try:    os.remove(f'{terminal.install_path}/plugins/corepackage.py')
         except: print("[CorePackage] Failed to disable self")
     
