@@ -73,33 +73,38 @@ class Terminal(object):
                 except Exception as e:
                     print(f"[PluginLoader::ERROR] Failed to load plugin {plugin}: {e}")
 
-
     def main(self, display_on_load: bool = False):
-        if display_on_load: print("[Terminal::INFO] Terminal loaded")
-        self.call_hook(Hooks.on_main, {})
-        while not hasattr(self, 'stop'):
-            if len(self.data['debug_logs']) > 100_000:
-                self.data['debug_logs'] = self.data['debug_logs'][100:]
-                
-            prompt    = self.call_hook(Hooks.before_prompt, {'prompt': f'>>'})
-            command   = self.input.get_input(prompt['prompt'])
-            hook_resp = self.call_hook(Hooks.before_command, {'command': command})
+        def main(self, display_on_load: bool = False):
+            if display_on_load: print("[Terminal::INFO] Terminal loaded")
+            self.call_hook(Hooks.on_main, {})
+            while not hasattr(self, 'stop'):
+                if len(self.data['debug_logs']) > 100_000:
+                    self.data['debug_logs'] = self.data['debug_logs'][100:]
+                    
+                prompt    = self.call_hook(Hooks.before_prompt, {'prompt': f'>>'})
+                command   = self.input.get_input(prompt['prompt'])
+                hook_resp = self.call_hook(Hooks.before_command, {'command': command})
 
-            if 'abort' in hook_resp and hook_resp['abort']['value']:
-                if hook_resp['abort']['callback'] is not None:
-                    hook_resp['abort']['callback']()
-                continue
+                if 'abort' in hook_resp and hook_resp['abort']['value']:
+                    if hook_resp['abort']['callback'] is not None:
+                        hook_resp['abort']['callback']()
+                    continue
 
-            if hook_resp['command'].strip().startswith('cd'):
-                try:
-                    os.chdir(command.split(' ')[1])
-                except IndexError:
-                    print("cd: missing operand")
-                except FileNotFoundError:
-                    print("cd: no such file or directory")
-                continue
+                if hook_resp['command'].strip().startswith('cd'):
+                    try:
+                        os.chdir(command.split(' ')[1])
+                    except IndexError:
+                        print("cd: missing operand")
+                    except FileNotFoundError:
+                        print("cd: no such file or directory")
+                    continue
 
-            os.system(hook_resp['command'])
+                os.system(hook_resp['command'])
+        try:
+            main(self, display_on_load)
+        except KeyboardInterrupt:
+            self.call_hook(Hooks.on_keyboard_interrupt, {})
+            self.main()
                 
 terminal = Terminal()
 terminal.main()

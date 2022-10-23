@@ -1,7 +1,8 @@
 class hooks(object):
     def __init__(self):
-        self.on_load   = "builtin::on_load"
-        self.on_main   = "builtin::on_main"
+        self.on_load               = "builtin::on_load"
+        self.on_main               = "builtin::on_main"
+        self.on_keyboard_interrupt = "builtin::on_keyboard_interrupt"
 
         self.before_prompt  = "builtin::before_prompt"
         self.before_command = "builtin::before_command"
