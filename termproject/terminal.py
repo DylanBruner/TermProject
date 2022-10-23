@@ -22,6 +22,8 @@ class Terminal(object):
         self.input = Input()#Used for tab completion
 
         self.load_plugins()
+
+        self.install_path = os.path.dirname(os.path.realpath(__file__))
     
     def call_hook(self, hook: str, data: dict) -> dict:
         if hook in self.hooks:
