@@ -18,7 +18,9 @@ class PluginStore(object):
             hooks.before_command: self.before_command,
         }
 
-        self.manifest_cache = requests.get("https://raw.githubusercontent.com/DylanBruner/TermProject/master/plugins/manifest.json").json()
+        self.manifest_cache = requests.get("https://raw.githubusercontent.com/DylanBruner/TermProject/master/plugins/manifest.json", headers={
+            "No-Cache": "true"
+        }).json()
 
     @hooks.requestTerminalRefrence
     def before_command(self, data: dict, terminal: Terminal):
