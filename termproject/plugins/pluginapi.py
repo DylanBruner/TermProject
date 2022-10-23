@@ -13,7 +13,7 @@ class PluginApi(object):
         self.hooks = {}
 
     def load_plugin(self, plugin_file: str, terminal: Terminal) -> None:
-        spec = importlib.util.spec_from_file_location(plugin_file.split('.')[0], f"termproject/plugins/{plugin_file}")
+        spec = importlib.util.spec_from_file_location(plugin_file, f"termproject/plugins/{plugin_file}")
         terminal.load_plugin(plugin_file.split('.')[0], spec)
 
     def unload_plugin(self, plugin_name: str, terminal: Terminal) -> None:
