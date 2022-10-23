@@ -20,6 +20,16 @@ class PluginStore(object):
             "No-Cache": "true"
         }).json()
 
+    def _on_load(self, terminal: Terminal) -> None:
+        """
+        Like __init__ but we get terminal access
+        """
+        for repo in terminal.user_config['plugin_config']['additional_repos']:
+            try:
+                self.manifest_cache['plugins'].extend(requests.get(repo).json()['plugins'])
+            except Exception as e:
+                print(f"[PluginStore:ERROR] Failed to load plugin-repo {repo}", e)
+
     @hooks.requestTerminalRefrence
     def before_command(self, data: dict, terminal: Terminal):
         """

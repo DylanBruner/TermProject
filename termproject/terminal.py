@@ -2,9 +2,11 @@ import os, importlib
 try:
     from termproject.hooks import hooks as _hooks
     from termproject.tabbyinput import Input
+    from termproject.autoconfig import Config
 except ModuleNotFoundError:
     from hooks import hooks as _hooks
     from tabbyinput import Input
+    from autoconfig import Config
 
 Hooks = _hooks()
 
@@ -19,6 +21,7 @@ class Terminal(object):
         self.install_path = os.path.dirname(os.path.realpath(__file__))
         self.config       = {'plugins_folder': f'{self.install_path}/plugins'}
         self.data         = {'debug_logs': []}
+        self.user_config  = Config(f"{self.install_path}/userconfig.json")
 
         self.input = Input()#Used for tab completion
 
