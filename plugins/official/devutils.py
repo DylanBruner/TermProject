@@ -73,7 +73,7 @@ class DevUtils(object):
         plugins = terminal.loaded_plugins.copy()
         for plugin in plugins:
             self.unload_plugin(f'!plugins unload {plugin}', terminal, False)
-            self.load_plugin(f'!plugins load {plugin}', terminal, False)
+        terminal.load_plugins()
         print("Reloaded all plugins")
 
     def settings_menu(self):
