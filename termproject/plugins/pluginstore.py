@@ -1,9 +1,7 @@
-import requests, importlib, os
+import requests, os
 
-from soupsieve import select
 from hooks import hooks as _hooks
 from terminal import Terminal
-from utilites import generateHelpMenu
 from search import Search
 
 hooks = _hooks()
@@ -85,7 +83,6 @@ class PluginStore(object):
             print(f"Uninstalled {plugin}")
         elif choice == "2":
             return
-
 
     def search(self, terminal: Terminal):
         selection   = Search([plugin['name'] for plugin in self.manifest_cache['plugins']]).search()

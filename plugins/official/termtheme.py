@@ -1,4 +1,4 @@
-import colorama, os, ctypes, sys, subprocess
+import colorama, os, ctypes, subprocess
 from hooks import hooks as _hooks
 
 hooks = _hooks()
