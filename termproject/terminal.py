@@ -35,6 +35,11 @@ class Terminal(object):
                     print(f"[HookCaller::ERROR] Hook {hook} returned None")
         return data
 
+    def get_plugin(self, name: str) -> object:
+        if name in self.loaded_plugins:
+            return self.loaded_plugins[name]
+        return None
+
     def load_plugin(self, plugin: str, spec):
         module = importlib.util.module_from_spec(spec)
         self.loaded_plugins[plugin] = module
