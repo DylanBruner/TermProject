@@ -31,8 +31,8 @@ class CorePackage(object):
                 if plugin['name'] in self.plugins:
                     pluginStore.installPluginFromUrl(plugin, terminal)
         
-        try:    os.remove(f'{terminal.install_path}/plugins/corepackage.py')
-        except: print("[CorePackage] Failed to disable self")
-        return data
+            try:    os.remove(f'{terminal.install_path}/plugins/corepackage.py')
+            except: print("[CorePackage] Failed to disable self")
+            return data
     
 EXPORTS = [CorePackage()]
