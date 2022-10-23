@@ -14,6 +14,8 @@ class Terminal(object):
         self.hooks          = {f"builtin::{hook}":[] for hook in Hooks.__dict__}
         self.loaded_plugins = {}
 
+        self.version = "v1.2"
+
         self.config = {'plugins_folder': 'termproject/plugins'}
         self.data   = {'debug_logs': []}
 
