@@ -1,8 +1,24 @@
 {
     "plugins": [
         {
-            "name": "testplugin",
-            "url": "https://raw.githubusercontent.com/DylanBruner/TermProject/master/plugins/testplugin/testplugin.py"
+            "name": "exampleplugin",
+            "url": "https://raw.githubusercontent.com/DylanBruner/TermProject/master/plugins/official/exampleplugin.py"
+        },
+        {
+            "name": "termtheme",
+            "url": "https://raw.githubusercontent.com/DylanBruner/TermProject/master/plugins/official/termtheme.py"
+        },
+        {
+            "name": "poke",
+            "url": "https://raw.githubusercontent.com/DylanBruner/TermProject/master/plugins/official/poke.py"
+        },
+        {
+            "name": "moresuggestions",
+            "url": "https://raw.githubusercontent.com/DylanBruner/TermProject/master/plugins/official/moresuggestions.py"
+        },
+        {
+            "name": "devutils",
+            "url": "https://raw.githubusercontent.com/DylanBruner/TermProject/master/plugins/official/devutils.py"
         }
     ]
 }
