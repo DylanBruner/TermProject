@@ -27,6 +27,10 @@
         {
             "name": "pyshell",
             "url": "https://raw.githubusercontent.com/DylanBruner/TermProject/master/plugins/official/pyshell.py"
+        },
+        {
+            "name": "autodetectvenv",
+            "url": "https://raw.githubusercontent.com/DylanBruner/TermProject/master/plugins/official/autodetectvenv.py"
         }
     ]
 }

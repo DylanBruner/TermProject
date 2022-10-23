@@ -1,5 +1,6 @@
-import colorama, os, ctypes, subprocess
+import colorama, os, ctypes, sys, subprocess
 from hooks import hooks as _hooks
+from terminal import Terminal
 
 hooks = _hooks()
 
@@ -29,14 +30,19 @@ class TerminalTheme(object):
     def strip_styling(self, text: str) -> str:
         return text.replace(colorama.Fore.RESET, '').replace(colorama.Back.RESET, '').replace(colorama.Style.RESET_ALL, '')
 
-    def before_prompt(self, data: dict):
+    @hooks.requestTerminalRefrence
+    def before_prompt(self, data: dict, terminal: Terminal) -> dict:
         data['prompt'] = f"{blackCyan}{chars['semiCircleLeft']}{colorama.Back.CYAN}{colorama.Fore.BLACK}"
         if self.isAdmin():
-            data['prompt'] += f"{colorama.Style.DIM}{colorama.Fore.MAGENTA}(Admin){colorama.Fore.BLACK}{colorama.Style.NORMAL} "
+            data['prompt'] += f"{colorama.Style.DIM}{colorama.Fore.MAGENTA}(Admin) {colorama.Fore.BLACK}{colorama.Style.NORMAL}"
         data['prompt'] += os.getcwd()+f"{colorama.Back.RESET}{colorama.Fore.RESET}"
         data['prompt'] += f'{colorama.Back.BLACK}{colorama.Fore.CYAN}{chars["forwardArrow"]}{colorama.Fore.RESET}{colorama.Back.RESET}'
 
-        return data
+        if 'termtheme::on_theme_path' in terminal.hooks:
+            for hook in terminal.hooks['termtheme::on_theme_path']:
+                new_data = hook(data)
+                if new_data: data = new_data
+            return data
     
     def before_command(self, data: dict) -> dict:
         if data['command'].startswith('ls'):

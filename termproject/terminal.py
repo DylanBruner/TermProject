@@ -51,7 +51,7 @@ class Terminal(object):
         #Plugin is now loaded, now we just gotta hook it into the terminal
         if not hasattr(self.loaded_plugins[plugin], 'EXPORTS'):
             print(f"[PluginLoader::ERROR] Plugin {plugin} has no EXPORTS")
-            del self.loaded_plugins[plugin]
+            del self.loaded_plugins[plugin]; return
 
         for export in self.loaded_plugins[plugin].EXPORTS:
             if not hasattr(export, 'hooks'):
@@ -60,8 +60,16 @@ class Terminal(object):
                 self.data['debug_logs'].append(f"[PluginLoader::INFO] Hooking {export.name} to {hook}")
                 if hook in self.hooks:
                     self.hooks[hook].append(export.hooks[hook])
-                else:
+                elif 'builtin::' in hook:
                     print(f"[PluginLoader::ERROR] Plugin {export.name} is trying to hook to an invalid hook {hook}")
+                else:
+                    self.data['debug_logs'].append(f"[PluginLoader::INFO] Creating hook {hook}")
+                    self.hooks[hook] = [export.hooks[hook]]
+        
+        #Check if any of the exports have a function called __first_load()
+        for export in self.loaded_plugins[plugin].EXPORTS:
+            if hasattr(export, '_first_load'):
+                export._first_load(self)
 
     def load_plugins(self) -> None:
         for plugin in os.listdir(self.config['plugins_folder']):
