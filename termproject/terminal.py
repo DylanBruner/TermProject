@@ -30,11 +30,12 @@ class Terminal(object):
                 #Get the functio name
                 if str(hook.__name__) == 'hookRequest_TerminalRefrence':
                     self.data['debug_logs'].append(f"[HookCaller::INFO] Hook {hook.__name__} is requesting terminal refrence")
-                    data = hook(data, terminal=self)
-                else: data = hook(data)
+                    new_data = hook(data, terminal=self)
+                else: new_data = hook(data)
                 
-                if data is None:
+                if new_data is None:
                     print(f"[HookCaller::ERROR] Hook {hook} returned None")
+                else: data = new_data
         return data
 
     def get_plugin(self, name: str, export: int = 0) -> object:
@@ -66,8 +67,11 @@ class Terminal(object):
         for plugin in os.listdir(self.config['plugins_folder']):
             if plugin.endswith('.py'):
                 #Import the plugin from the file
-                spec = importlib.util.spec_from_file_location(plugin, os.path.join(self.config['plugins_folder'], plugin))
-                self.load_plugin(plugin, spec)
+                try:
+                    spec = importlib.util.spec_from_file_location(plugin, os.path.join(self.config['plugins_folder'], plugin))
+                    self.load_plugin(plugin, spec)
+                except Exception as e:
+                    print(f"[PluginLoader::ERROR] Failed to load plugin {plugin}: {e}")
 
 
     def main(self, display_on_load: bool = False):
