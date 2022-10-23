@@ -1,13 +1,8 @@
-import requests
+import requests, importlib
 from hooks import hooks as _hooks
 from terminal import Terminal
 from utilites import generateHelpMenu
 from search import Search
-
-try:
-    from plugins.devutils import DevUtils
-except ModuleNotFoundError:
-    pass#Not necissarrily needed
 
 hooks = _hooks()
 
@@ -39,14 +34,10 @@ class PluginStore(object):
             f.write(data)
         print(f"Downloaded {plugin['name']}, installing it into the terminal...")
 
-        try:
-            devUtils = terminal.get_plugin("devutils.py").EXPORTS[0]
-            devUtils: DevUtils
-            if devUtils is not None:
-                devUtils.load_plugin(f'_ _ {plugin["name"]}', terminal, True)
-        except ModuleNotFoundError:
-            print("Failed to live-load plugin, please restart the terminal to use it")
-    
+        spec = importlib.util.spec_from_file_location(plugin['name'], f"termproject/plugins/{plugin['name']}.py")
+        terminal.load_plugin(plugin['name'], spec)
+
+
     def pluginstore(self, terminal: Terminal, command: str):
         """
         Get plugins from github

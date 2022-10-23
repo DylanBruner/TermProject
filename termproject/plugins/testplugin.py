@@ -3,7 +3,7 @@ from terminal import Terminal
 
 hooks = _hooks()
 
-class MoreSuggestions(object):
+class ExamplePlugin(object):
     def __init__(self):
         self.name = "Example Plugin"
         self.version = "0.1"
@@ -11,6 +11,6 @@ class MoreSuggestions(object):
         self.description = "Example plugin"
         self.hooks = {}
 
-        print("Hello, world!")
+        print("Hello, world! from example plugin")
     
-EXPORTS = [MoreSuggestions()]
+EXPORTS = [ExamplePlugin()]
