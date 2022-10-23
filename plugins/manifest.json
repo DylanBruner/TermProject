@@ -31,6 +31,10 @@
         {
             "name": "autodetectvenv",
             "url": "https://raw.githubusercontent.com/DylanBruner/TermProject/master/plugins/official/autodetectvenv.py"
+        },
+        {
+            "name": "termthemebasic",
+            "url": "https://raw.githubusercontent.com/DylanBruner/TermProject/master/plugins/official/termthemebasic.py"
         }
     ]
 }
