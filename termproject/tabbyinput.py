@@ -83,6 +83,8 @@ class Input(object):
                         input_data = self.entries[-historyIndex]
                         cursor_pos = len(input_data) + len(prompt)
                         self.reprint_with_cursor(input_data, cursor_pos)
+            elif char == b'\x03':
+                raise KeyboardInterrupt
             else:
                 input_data = input_data[:cursor_pos] + char.decode('utf-8') + input_data[cursor_pos:]
                 cursor_pos += 1
