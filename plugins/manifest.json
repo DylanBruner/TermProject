@@ -1,0 +1,8 @@
+{
+    "plugins": [
+        {
+            "name": "testplugin",
+            "url": "https://raw.githubusercontent.com/DylanBruner/TermProject/master/plugins/testplugin/testplugin.py"
+        }
+    ]
+}
