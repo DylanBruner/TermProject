@@ -32,7 +32,7 @@ class PluginStore(object):
     def installPluginFromUrl(self, plugin: dict, terminal: Terminal):
         print(f"Downloading {plugin['name']}...")
         data = requests.get(plugin['url']).text
-        with open(f"termproject/plugins/{plugin['name']}.py", "w") as f:
+        with open(f"{terminal.install_path}/plugins/{plugin['name']}.py", "w") as f:
             f.write(data)
         print(f"Downloaded {plugin['name']}, installing it into the terminal...")
 
@@ -62,7 +62,7 @@ class PluginStore(object):
         """
         Manage plugins
         """
-        plugins = [plugin for plugin in os.listdir("termproject/plugins") if plugin.endswith('.py')]
+        plugins = [plugin for plugin in os.listdir(f"{terminal.install_path}/plugins") if plugin.endswith('.py')]
         for i, plugin in enumerate(plugins):
             print(f"{i+1}. {plugin}")
         
@@ -79,7 +79,7 @@ class PluginStore(object):
         choice = input("Option: ")
         if choice == "1":
             terminal.get_plugin('pluginapi.py').unload_plugin(plugin, terminal)
-            os.remove(f"termproject/plugins/{plugin}")
+            os.remove(f"{terminal.install_path}/plugins/{plugin}")
             print(f"Uninstalled {plugin}")
         elif choice == "2":
             return

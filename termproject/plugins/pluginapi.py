@@ -14,7 +14,7 @@ class PluginApi(object):
 
     def load_plugin(self, plugin_file: str, terminal: Terminal) -> None:
         try:
-            spec = importlib.util.spec_from_file_location(plugin_file, f"termproject/plugins/{plugin_file}")
+            spec = importlib.util.spec_from_file_location(plugin_file, f"{terminal.install_path}/plugins/{plugin_file}")
             terminal.load_plugin(plugin_file.split('.')[0], spec)
         except Exception as e:
             print(f"[PluginAPI::load_plugin] Failed to load plugin: {e}")

@@ -42,7 +42,7 @@ class TerminalTheme(object):
             for hook in terminal.hooks['termtheme::on_theme_path']:
                 new_data = hook(data)
                 if new_data: data = new_data
-            return data
+        return data
     
     def before_command(self, data: dict) -> dict:
         if data['command'].startswith('ls'):

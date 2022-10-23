@@ -16,14 +16,15 @@ class Terminal(object):
 
         self.version = "v1.2"
 
-        self.config = {'plugins_folder': 'termproject/plugins'}
-        self.data   = {'debug_logs': []}
+        self.install_path = os.path.dirname(os.path.realpath(__file__))
+        self.config       = {'plugins_folder': f'{self.install_path}/plugins'}
+        self.data         = {'debug_logs': []}
 
         self.input = Input()#Used for tab completion
 
         self.load_plugins()
 
-        self.install_path = os.path.dirname(os.path.realpath(__file__))
+        print(self.install_path)
     
     def call_hook(self, hook: str, data: dict) -> dict:
         if hook in self.hooks:

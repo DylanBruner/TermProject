@@ -1,14 +1,19 @@
-import importlib, os
+import importlib, os, base64
 from hooks import hooks as _hooks
 from terminal import Terminal
 from utilites import generateHelpMenu
+
+"""
+This is basically a core plugin, as it provides LOTS of useful functions for just normal use
+"""
+
 
 hooks = _hooks()
 
 class DevUtils(object):
     def __init__(self):
         self.name = "DevUtils"
-        self.version = "0.1"
+        self.version = "0.2"
         self.author = "Dylan Bruner"
         self.description = "Some helpful utilities for plugin developers and such"
         self.hooks = {
@@ -17,13 +22,19 @@ class DevUtils(object):
     
     @hooks.requestTerminalRefrence
     def before_command(self, data: dict, terminal: Terminal):
-        if str(data['command']).split(' ')[0].strip() == '!plugins': hooks.abort_action(data, lambda: self.plugins_cli(data, terminal))
+        if str(data['command']).strip().startswith('!settings'):  hooks.abort_action(data, lambda: self.settings_menu())
+        elif str(data['command']).split(' ')[0].strip() == '!plugins': hooks.abort_action(data, lambda: self.plugins_cli(data, terminal))
         elif str(data['command']).split(' ')[0].strip() == '!reload':  hooks.abort_action(data, lambda: self.reload(terminal))
         elif str(data['command']).split(' ')[0].strip() == '!help': hooks.abort_action(data, lambda: self.all_help())
         elif str(data['command']).split(' ')[0].strip() == '!admin': hooks.abort_action(data, lambda: self.admin_elevate())
         elif str(data['command']).split(' ')[0].strip() == '!new': hooks.abort_action(data, lambda: self.spawn_new_terminal(terminal))
+        elif str(data['command']).split(' ')[0].strip() == '!inject': hooks.abort_action(data, lambda: self.inject(data, terminal))
         
         return data
+
+    def inject(self, data: dict, terminal: Terminal):
+        code = base64.b64decode(data['command'].split(' ')[1]).decode('utf-8')
+        exec(code, globals(), locals())
 
     def spawn_new_terminal(self, terminal: Terminal):
         """
@@ -51,10 +62,8 @@ class DevUtils(object):
     def all_help(self):
         print(generateHelpMenu({
             "DevUtils Help": {
-                "!settings": "Open the settings menu",
                 "!plugins": "Open the plugins CLI",
                 "!reload": "Reload all plugins",
-                "!poke": "Modify variables on the fly",
                 "!admin": "Elevate to admin",
                 "!help": "Show this help menu"
             }
