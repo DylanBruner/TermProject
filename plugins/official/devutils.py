@@ -18,11 +18,11 @@ class DevUtils(object):
     @hooks.requestTerminalRefrence
     def before_command(self, data: dict, terminal: Terminal):
         if str(data['command']).strip().startswith('!settings'):  hooks.abort_action(data, lambda: self.settings_menu())
-        elif str(data['command']).strip().startswith('!plugins'): hooks.abort_action(data, lambda: self.plugins_cli(data, terminal))
-        elif str(data['command']).strip().startswith('!reload'):  hooks.abort_action(data, lambda: self.reload(terminal))
-        elif str(data['command']).strip() == '!help': hooks.abort_action(data, lambda: self.all_help())
-        elif str(data['command']).strip() == '!admin': hooks.abort_action(data, lambda: self.admin_elevate())
-        elif str(data['command']).strip() == '!new': hooks.abort_action(data, lambda: self.spawn_new_terminal(terminal))
+        elif str(data['command']).split(' ')[0].strip().startswith('!plugins'): hooks.abort_action(data, lambda: self.plugins_cli(data, terminal))
+        elif str(data['command']).split(' ')[0].strip().startswith('!reload'):  hooks.abort_action(data, lambda: self.reload(terminal))
+        elif str(data['command']).split(' ')[0].strip() == '!help': hooks.abort_action(data, lambda: self.all_help())
+        elif str(data['command']).split(' ')[0].strip() == '!admin': hooks.abort_action(data, lambda: self.admin_elevate())
+        elif str(data['command']).split(' ')[0].strip() == '!new': hooks.abort_action(data, lambda: self.spawn_new_terminal(terminal))
         
         return data
 
