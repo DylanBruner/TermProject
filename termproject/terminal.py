@@ -69,8 +69,8 @@ class Terminal(object):
         
         #Check if any of the exports have a function called __first_load()
         for export in self.loaded_plugins[plugin].EXPORTS:
-            if hasattr(export, '_first_load'):
-                export._first_load(self)
+            if hasattr(export, '_on_load'):
+                export._on_load(self)
 
     def load_plugins(self) -> None:
         for plugin in os.listdir(self.config['plugins_folder']):

@@ -21,18 +21,14 @@ class CorePackage(object):
 
         print(f"[CorePackage] run '!installcore' to install")
 
-    @hooks.requestTerminalRefrence
-    def before_command(self, data: dict, terminal: Terminal):
-        if data['command'].split(' ')[0].lower() == '!installcore':
-            hooks.abort_action(data, lambda: None)
-            print(f"[CorePackage] Installing core plugins")
-            pluginStore: PluginStore = terminal.get_plugin('pluginstore.py')
-            for plugin in pluginStore.manifest_cache['plugins']:
-                if plugin['name'] in self.plugins:
-                    pluginStore.installPluginFromUrl(plugin, terminal)
-        
-            try:    os.remove(f'{terminal.install_path}/plugins/corepackage.py')
-            except: print("[CorePackage] Failed to disable self")
-            return data
+    def _on_load(self, terminal: Terminal):
+        print(f"[CorePackage] Installing core plugins")
+        pluginStore: PluginStore = terminal.get_plugin('pluginstore.py')
+        for plugin in pluginStore.manifest_cache['plugins']:
+            if plugin['name'] in self.plugins:
+                pluginStore.installPluginFromUrl(plugin, terminal)
+    
+        try:    os.remove(f'{terminal.install_path}/plugins/corepackage.py')
+        except: print("[CorePackage] Failed to disable self")
     
 EXPORTS = [CorePackage()]
