@@ -23,8 +23,6 @@ class Terminal(object):
         self.input = Input()#Used for tab completion
 
         self.load_plugins()
-
-        print(self.install_path)
     
     def call_hook(self, hook: str, data: dict) -> dict:
         if hook in self.hooks:
