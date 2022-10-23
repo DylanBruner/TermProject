@@ -3,12 +3,17 @@ from hooks import hooks as _hooks
 from terminal import Terminal
 from utilites import generateHelpMenu
 
+"""
+This is basically a core plugin, as it provides LOTS of useful functions for just normal use
+"""
+
+
 hooks = _hooks()
 
 class DevUtils(object):
     def __init__(self):
         self.name = "DevUtils"
-        self.version = "0.1"
+        self.version = "0.2"
         self.author = "Dylan Bruner"
         self.description = "Some helpful utilities for plugin developers and such"
         self.hooks = {
@@ -52,10 +57,8 @@ class DevUtils(object):
     def all_help(self):
         print(generateHelpMenu({
             "DevUtils Help": {
-                "!settings": "Open the settings menu",
                 "!plugins": "Open the plugins CLI",
                 "!reload": "Reload all plugins",
-                "!poke": "Modify variables on the fly",
                 "!admin": "Elevate to admin",
                 "!help": "Show this help menu"
             }
