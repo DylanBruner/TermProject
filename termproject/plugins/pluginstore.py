@@ -36,12 +36,12 @@ class PluginStore(object):
         commands: Commands = terminal.get_plugin('commands.py')
         commands.register_command('!pluginstore', self.pluginstore, 'Get plugins from github')
 
-    def installPluginFromUrl(self, plugin: dict, terminal: Terminal):
-        print(f"Downloading {plugin['name']}...")
+    def installPluginFromUrl(self, plugin: dict, terminal: Terminal, do_print: bool = True):
+        if do_print: print(f"Downloading {plugin['name']}...")
         data = requests.get(plugin['url']).text
         with open(f"{terminal.install_path}/plugins/{plugin['name']}.py", "w") as f:
             f.write(data)
-        print(f"Downloaded {plugin['name']}, installing it into the terminal...")
+        if do_print: print(f"Downloaded {plugin['name']}, installing it into the terminal...")
 
         #spec = importlib.util.spec_from_file_location(plugin['name'], f"termproject/plugins/{plugin['name']}.py")
         #terminal.load_plugin(plugin['name'], spec)
