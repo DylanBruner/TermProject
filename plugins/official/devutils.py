@@ -49,25 +49,25 @@ class DevUtils(object):
         print(('='*10)+'[Updating Core]'+('='*10))
         if not os.path.exists(terminal.install_path+'/tmp'):
             os.mkdir(terminal.install_path+'/tmp')
-            print('Downloading update...')
-            r = requests.get('https://github.com/DylanBruner/TermProject/archive/refs/heads/master.zip')
-            with open(terminal.install_path+'/tmp/update.zip', 'wb') as f:
-                f.write(r.content)
-            print('Extracting update...')
-            try:
-                shutil.unpack_archive(terminal.install_path+'/tmp/update.zip', terminal.install_path+'/tmp')
-                print('Copying files...')
-                for file in os.listdir(terminal.install_path+'/tmp/TermProject-master/termproject/plugins'):
-                    shutil.copyfile(terminal.install_path+'/tmp/TermProject-master/termproject/plugins/'+file, terminal.install_path+'/plugins/'+file)
-                #Copy all .py files in tmp/TermProject-master/termproject to termproject
-                for file in os.listdir(terminal.install_path+'/tmp/TermProject-master/termproject'):
-                    if file.endswith('.py'):
-                        shutil.copyfile(terminal.install_path+'/tmp/TermProject-master/termproject/'+file, terminal.install_path+'/'+file)
-            except Exception as e:
-                print(f"Update failed: {e}")
-            print("Cleaning up...")
-            shutil.rmtree(terminal.install_path+'/tmp')
-            print("Update complete!")
+        print('Downloading update...')
+        r = requests.get('https://github.com/DylanBruner/TermProject/archive/refs/heads/master.zip')
+        with open(terminal.install_path+'/tmp/update.zip', 'wb') as f:
+            f.write(r.content)
+        print('Extracting update...')
+        try:
+            shutil.unpack_archive(terminal.install_path+'/tmp/update.zip', terminal.install_path+'/tmp')
+            print('Copying files...')
+            for file in os.listdir(terminal.install_path+'/tmp/TermProject-master/termproject/plugins'):
+                shutil.copyfile(terminal.install_path+'/tmp/TermProject-master/termproject/plugins/'+file, terminal.install_path+'/plugins/'+file)
+            #Copy all .py files in tmp/TermProject-master/termproject to termproject
+            for file in os.listdir(terminal.install_path+'/tmp/TermProject-master/termproject'):
+                if file.endswith('.py'):
+                    shutil.copyfile(terminal.install_path+'/tmp/TermProject-master/termproject/'+file, terminal.install_path+'/'+file)
+        except Exception as e:
+            print(f"Update failed: {e}")
+        print("Cleaning up...")
+        shutil.rmtree(terminal.install_path+'/tmp')
+        print("Update complete!")
 
     @commands.requestTerminalRefrence
     def inject(self, data: dict, terminal: Terminal):
