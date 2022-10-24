@@ -17,7 +17,7 @@ class PluginApi(object):
             spec = importlib.util.spec_from_file_location(plugin_file, f"{terminal.install_path}/plugins/{plugin_file}")
             terminal.load_plugin(plugin_file.split('.')[0], spec)
         except Exception as e:
-            print(f"[PluginAPI::load_plugin] Failed to load plugin: {e}")
+            pass
 
     def unload_plugin(self, plugin_name: str, terminal: Terminal) -> None:
         try:
@@ -34,7 +34,7 @@ class PluginApi(object):
                                 terminal.hooks[hook_type].remove(hook)
                     return True
         except Exception as e:
-            print(f"[PluginAPI::unload_plugin] Failed to unload plugin: {e}")
+            pass
         return False
     
 EXPORTS = [PluginApi()]
