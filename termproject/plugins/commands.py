@@ -1,3 +1,4 @@
+import inspect
 from hooks import hooks as _hooks
 from terminal import Terminal
 from utilites import generateHelpMenu
@@ -23,18 +24,31 @@ class Commands(object):
         """
         Register a command
         """
+        try:    plugin_name = inspect.stack()[1][0].f_locals["self"].__class__.__name__
+        except: plugin_name = "Unknown"
+
         self.commands[command] = {
             'function': function,
-            'description': description
+            'description': description,
+            'registered_by': plugin_name
         }
 
     def help(self):
         """
         Show help
         """
-        menu = {"Commands": {}}
+        plugin_names = []
         for command in self.commands:
-            menu['Commands'][command] = self.commands[command]['description']
+            if self.commands[command]['registered_by'] not in plugin_names: 
+                plugin_names.append(self.commands[command]['registered_by'])
+        
+        menu = {}
+        for plugin_name in plugin_names:
+            menu[plugin_name] = {}
+            for command in self.commands:
+                if self.commands[command]['registered_by'] == plugin_name:
+                    menu[plugin_name][command] = self.commands[command]['description']
+        
         print(generateHelpMenu(menu))
     
     @hooks.requestTerminalRefrence
