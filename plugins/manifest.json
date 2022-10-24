@@ -39,6 +39,18 @@
         {
             "name": "cmdaliases",
             "url": "https://raw.githubusercontent.com/DylanBruner/TermProject/master/plugins/official/cmdaliases.py"
+        },
+        {
+            "name": "commands",
+            "url": "https://raw.githubusercontent.com/DylanBruner/TermProject/master/plugins/official/commands.py"
+        },
+        {
+            "name": "pluginstore",
+            "url": "https://raw.githubusercontent.com/DylanBruner/TermProject/master/plugins/official/pluginstore.py"
+        },
+        {
+            "name": "pluginapi",
+            "url": "https://raw.githubusercontent.com/DylanBruner/TermProject/master/plugins/official/pluginapi.py"
         }
     ]
 }
