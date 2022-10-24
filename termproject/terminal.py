@@ -70,20 +70,19 @@ class Terminal(object):
                     self.data['debug_logs'].append(f"[PluginLoader::INFO] Creating hook {hook}")
                     self.hooks[hook] = [export.hooks[hook]]
         
-        #Check if any of the exports have a function called __first_load()
-        for export in self.loaded_plugins[plugin].EXPORTS:
-            if hasattr(export, '_on_load'):
-                export._on_load(self)
-
     def load_plugins(self) -> None:
-        for plugin in os.listdir(self.config['plugins_folder']):
-            if plugin.endswith('.py'):
-                #Import the plugin from the file
-                try:
-                    spec = importlib.util.spec_from_file_location(plugin, os.path.join(self.config['plugins_folder'], plugin))
-                    self.load_plugin(plugin, spec)
-                except Exception as e:
-                    print(f"[PluginLoader::ERROR] Failed to load plugin {plugin}: {e}")
+        for plugin in [plugin for plugin in os.listdir(self.config['plugins_folder']) if plugin.endswith('.py')]:
+            #Import the plugin from the file
+            try:
+                spec = importlib.util.spec_from_file_location(plugin, os.path.join(self.config['plugins_folder'], plugin))
+                self.load_plugin(plugin, spec)
+            except Exception as e:
+                print(f"[PluginLoader::ERROR] Failed to load plugin {plugin}: {e}")
+        
+        for plugin in self.loaded_plugins:
+            for export in self.loaded_plugins[plugin].EXPORTS:
+                if hasattr(export, '_on_load'):
+                    export._on_load(self)
 
     def main(self, display_on_load: bool = False):
         def main(self, display_on_load: bool = False):
