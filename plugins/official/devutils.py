@@ -40,7 +40,7 @@ class DevUtils(object):
                 for plugin_data in plugin_store.manifest_cache['plugins']:
                     if plugin_data['name'] == plugin.split('.py')[0]:
                         try:
-                            #plugin_store.installPluginFromUrl(plugin_data, terminal, False)
+                            plugin_store.installPluginFromUrl(plugin_data, terminal, False)
                             print(f"{colorama.Fore.GREEN}Updated {plugin_data['name']}{colorama.Fore.RESET}")
                         except Exception as e:
                             print(f"{colorama.Fore.RED}Failed to update {plugin_data['name']}: {e}{colorama.Fore.RESET}")
