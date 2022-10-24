@@ -2,13 +2,14 @@ import importlib, os, base64
 from hooks import hooks as _hooks
 from terminal import Terminal
 from utilites import generateHelpMenu
-
+from plugins.commands import Commands
 """
 This is basically a core plugin, as it provides LOTS of useful functions for just normal use
 """
 
 
-hooks = _hooks()
+hooks    = _hooks()
+commands = Commands()
 
 class DevUtils(object):
     def __init__(self):
@@ -17,68 +18,33 @@ class DevUtils(object):
         self.author = "Dylan Bruner"
         self.description = "Some helpful utilities for plugin developers and such"
         self.hooks = {
-            hooks.before_command: self.before_command
         }
-    
-    @hooks.requestTerminalRefrence
-    def before_command(self, data: dict, terminal: Terminal):
-        if str(data['command']).strip().startswith('!settings'):  hooks.abort_action(data, lambda: self.settings_menu())
-        elif str(data['command']).split(' ')[0].strip() == '!plugins': hooks.abort_action(data, lambda: self.plugins_cli(data, terminal))
-        elif str(data['command']).split(' ')[0].strip() == '!reload':  hooks.abort_action(data, lambda: self.reload(terminal))
-        elif str(data['command']).split(' ')[0].strip() == '!help': hooks.abort_action(data, lambda: self.all_help())
-        elif str(data['command']).split(' ')[0].strip() == '!admin': hooks.abort_action(data, lambda: self.admin_elevate())
-        elif str(data['command']).split(' ')[0].strip() == '!new': hooks.abort_action(data, lambda: self.spawn_new_terminal(terminal))
-        elif str(data['command']).split(' ')[0].strip() == '!inject': hooks.abort_action(data, lambda: self.inject(data, terminal))
-        
-        return data
 
+    def _on_load(self, terminal: Terminal):
+        commands: Commands = terminal.get_plugin('commands.py')
+        commands.register_command('!inject', self.inject, "Inject code into the terminal")
+        commands.register_command('!plugins', self.plugins_cli, "Open the plugins CLI")
+        commands.register_command('!reload', self.reload, "Reload all plugins")
+        commands.register_command('!admin', self.admin_elevate, "Elevate to admin")
+
+    @commands.requestTerminalRefrence
     def inject(self, data: dict, terminal: Terminal):
         code = base64.b64decode(data['command'].split(' ')[1]).decode('utf-8')
         exec(code, globals(), locals())
 
-    def spawn_new_terminal(self, terminal: Terminal):
-        """
-        Attempt to make a new terminal without leaving the program!
-        """
-        #Basically strip the terminal of all plugins and hooks so it takes up less memory because it will still be running in the background
-        terminal.stop = True#This will just stop the main loop
-        terminal.hooks = {f"builtin::{hook}":[] for hook in _hooks().__dict__}
-        terminal.data['debug_logs'] = []
-        plugins = terminal.loaded_plugins.copy()
-        for plugin in plugins: self.unload_plugin(plugin, terminal, False)
-
-        #Try to remove any other attributes in terminal
-        attributes = terminal.__dict__.copy()
-        for attr in attributes:
-            if attr not in ['stop']:
-                del terminal.__dict__[attr]
-
-        Terminal().main(True)
-        
     def admin_elevate(self):
         if os.system('gsudo python termproject/terminal.py') != 0:
             print("[ERROR] Failed to elevate to admin, is gsudo installed? (choco install gsudo)")
     
-    def all_help(self):
-        print(generateHelpMenu({
-            "DevUtils Help": {
-                "!plugins": "Open the plugins CLI",
-                "!reload": "Reload all plugins",
-                "!admin": "Elevate to admin",
-                "!help": "Show this help menu"
-            }
-        }))
-
-    def reload(self, terminal: Terminal):
+    @commands.requestTerminalRefrence
+    def reload(self, data: dict, terminal: Terminal):
         plugins = terminal.loaded_plugins.copy()
         for plugin in plugins:
             self.unload_plugin(f'!plugins unload {plugin}', terminal, False)
         terminal.load_plugins()
         print("Reloaded all plugins")
 
-    def settings_menu(self):
-        print("Settings Menu")
-
+    @commands.requestTerminalRefrence
     def plugins_cli(self, data: dict, terminal: Terminal):
         command = str(data['command']).strip()
         if command == '!plugins list':
