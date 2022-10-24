@@ -51,6 +51,10 @@
         {
             "name": "pluginapi",
             "url": "https://raw.githubusercontent.com/DylanBruner/TermProject/master/plugins/official/pluginapi.py"
+        },
+        {
+            "name": "remote",
+            "url": "https://raw.githubusercontent.com/DylanBruner/TermProject/master/plugins/official/remote.py"
         }
     ]
 }
