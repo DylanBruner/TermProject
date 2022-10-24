@@ -3,8 +3,10 @@ import requests, os
 from hooks import hooks as _hooks
 from terminal import Terminal
 from search import Search
+from plugins.commands import Commands
 
-hooks = _hooks()
+hooks    = _hooks()
+commands = Commands()
 
 class PluginStore(object):
     def __init__(self):
@@ -13,7 +15,6 @@ class PluginStore(object):
         self.author = "Dylan Bruner"
         self.description = "Get plugins from github"
         self.hooks = {
-            hooks.before_command: self.before_command,
         }
 
         self.manifest_cache = requests.get("https://raw.githubusercontent.com/DylanBruner/TermProject/master/plugins/manifest.json", headers={
@@ -30,14 +31,10 @@ class PluginStore(object):
             except Exception as e:
                 print(f"[PluginStore:ERROR] Failed to load plugin-repo {repo}", e)
 
-    @hooks.requestTerminalRefrence
-    def before_command(self, data: dict, terminal: Terminal):
-        """
-        Used to register custom commands
-        """
-        if str(data['command']).strip().startswith('!pluginstore'):
-            hooks.abort_action(data, lambda: self.pluginstore(terminal, data['command']))
-        return data
+
+        #Register commands
+        commands: Commands = terminal.get_plugin('commands.py')
+        commands.register_command('!pluginstore', self.pluginstore, 'Get plugins from github')
 
     def installPluginFromUrl(self, plugin: dict, terminal: Terminal):
         print(f"Downloading {plugin['name']}...")
@@ -54,7 +51,8 @@ class PluginStore(object):
             print("Failed to live-load plugin, please restart the terminal to use it", e)
 
 
-    def pluginstore(self, terminal: Terminal, command: str):
+    @commands.requestTerminalRefrence
+    def pluginstore(self, data: dict, terminal: Terminal):
         """
         Get plugins from github
         """

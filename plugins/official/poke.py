@@ -1,8 +1,10 @@
 from hooks import hooks as _hooks
 from terminal import Terminal
 from utilites import generateHelpMenu
+from plugins.commands import Commands
 
-hooks = _hooks()
+hooks    = _hooks()
+commands = Commands()
 
 class Poke(object):
     def __init__(self):
@@ -11,17 +13,11 @@ class Poke(object):
         self.author = "Dylan Bruner"
         self.description = "Allow for modifying the terminal's variables on the fly"
         self.hooks = {
-            hooks.before_command: self.before_command,
         }
 
-    @hooks.requestTerminalRefrence
-    def before_command(self, data: dict, terminal: Terminal):
-        """
-        Used to register custom commands
-        """
-        if str(data['command']).strip().startswith('!poke'):
-            hooks.abort_action(data, lambda: self.poke(terminal, data['command']))
-        return data
+    def _on_load(self, terminal: Terminal):
+        commands: Commands = terminal.get_plugin('commands.py')
+        commands.register_command('!poke', self.poke, 'Used to poke the terminal\'s variables')
 
     def help_menu(self):
         print(generateHelpMenu({
@@ -34,10 +30,12 @@ class Poke(object):
             }
         }))
 
-    def poke(self, terminal: Terminal, command: str):
+    @commands.requestTerminalRefrence
+    def poke(self, data: dict, terminal: Terminal):
         """
         Used to poke the terminal's variables
         """
+        command = data['command']
         try:
             if command.startswith('!poke get'):
                 if command.split(' ')[2] in terminal.__dict__:
