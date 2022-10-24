@@ -1,8 +1,9 @@
-import importlib, os, base64
+import importlib, os, base64, colorama
 from hooks import hooks as _hooks
 from terminal import Terminal
 from utilites import generateHelpMenu
 from plugins.commands import Commands
+from plugins.pluginstore import PluginStore
 """
 This is basically a core plugin, as it provides LOTS of useful functions for just normal use
 """
@@ -26,6 +27,23 @@ class DevUtils(object):
         commands.register_command('!plugins', self.plugins_cli, "Open the plugins CLI")
         commands.register_command('!reload', self.reload, "Reload all plugins")
         commands.register_command('!admin', self.admin_elevate, "Elevate to admin")
+        commands.register_command('!update', self.update, "Update the terminal")
+
+    @commands.requestTerminalRefrence
+    def update(self, data: str, terminal: Terminal):
+        plugin_store: PluginStore = terminal.get_plugin('pluginstore.py')
+        plugin_names = [plugin_name['name'] for plugin_name in plugin_store.manifest_cache['plugins'] if plugin_name != '']
+        
+        for plugin in terminal.loaded_plugins.copy().keys():
+            if plugin.split('.py')[0] in plugin_names:
+                for plugin_data in plugin_store.manifest_cache['plugins']:
+                    if plugin_data['name'] == plugin.split('.py')[0]:
+                        try:
+                            plugin_store.installPluginFromUrl(plugin_data, terminal, False)
+                            print(f"{colorama.Fore.GREEN}Updated {plugin_data['name']}{colorama.Fore.RESET}")
+                        except Exception as e:
+                            print(f"{colorama.Fore.RED}Failed to update {plugin_data['name']}: {e}{colorama.Fore.RESET}")
+        self.reload(data, terminal, False)
 
     @commands.requestTerminalRefrence
     def inject(self, data: dict, terminal: Terminal):
@@ -38,14 +56,14 @@ class DevUtils(object):
             print("[ERROR] Failed to elevate to admin, is gsudo installed? (choco install gsudo)")
     
     @commands.requestTerminalRefrence
-    def reload(self, data: dict, terminal: Terminal):
+    def reload(self, data: dict, terminal: Terminal, do_print: bool = True):
         for hook in terminal.hooks: terminal.hooks[hook] = []
         terminal.get_plugin('commands.py').commands = {}
         plugins = terminal.loaded_plugins.copy()
         for plugin in plugins:
             self.unload_plugin(f'!plugins unload {plugin}', terminal, False)
         terminal.load_plugins()
-        print("Reloaded all plugins")
+        if do_print: print("Reloaded all plugins")
 
     @commands.requestTerminalRefrence
     def plugins_cli(self, data: dict, terminal: Terminal):
