@@ -57,11 +57,11 @@ class DevUtils(object):
             shutil.unpack_archive(terminal.install_path+'/tmp/update.zip', terminal.install_path+'/tmp')
             print('Copying files...')
             for file in os.listdir(terminal.install_path+'/tmp/TermProject-master/termproject/plugins'):
-                shutil.copyfile(terminal.install_path+'/tmp/TermProject-master/termproject/plugins/'+file, terminal.install_path+'/termproject/plugins/'+file)
+                shutil.copyfile(terminal.install_path+'/tmp/TermProject-master/termproject/plugins/'+file, terminal.install_path+'/plugins/'+file)
             #Copy all .py files in tmp/TermProject-master/termproject to termproject
             for file in os.listdir(terminal.install_path+'/tmp/TermProject-master/termproject'):
                 if file.endswith('.py'):
-                    shutil.copyfile(terminal.install_path+'/tmp/TermProject-master/termproject/'+file, terminal.install_path+'/termproject/'+file)
+                    shutil.copyfile(terminal.install_path+'/tmp/TermProject-master/termproject/'+file, terminal.install_path+'/'+file)
             print("Cleaning up...")
             shutil.rmtree(terminal.install_path+'/tmp')
             print("Update complete!")
