@@ -8,7 +8,7 @@ class Search(object):
     def search(self) -> str:
         os.system('cls' if os.name == 'nt' else 'clear')
         query = input("Search: ")
-        self.results = [item for item in self.items if query.lower() in item.lower()][:10]
+        self.results = [item for item in self.items if query.lower() in item.lower()][:25]
 
         for result in self.results:
             print(f"{self.results.index(result)+1}. {result}")
