@@ -32,12 +32,15 @@ class DevUtils(object):
         code = base64.b64decode(data['command'].split(' ')[1]).decode('utf-8')
         exec(code, globals(), locals())
 
-    def admin_elevate(self):
-        if os.system('gsudo python termproject/terminal.py') != 0:
+    @commands.requestTerminalRefrence
+    def admin_elevate(self, data: dict, terminal: Terminal):
+        if os.system(f'gsudo python "{terminal.install_path}/terminal.py"') != 0:
             print("[ERROR] Failed to elevate to admin, is gsudo installed? (choco install gsudo)")
     
     @commands.requestTerminalRefrence
     def reload(self, data: dict, terminal: Terminal):
+        for hook in terminal.hooks: terminal.hooks[hook] = []
+        terminal.get_plugin('commands.py').commands = {}
         plugins = terminal.loaded_plugins.copy()
         for plugin in plugins:
             self.unload_plugin(f'!plugins unload {plugin}', terminal, False)
