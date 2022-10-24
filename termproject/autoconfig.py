@@ -9,4 +9,6 @@ class Config(object):
             self.config = json.load(f)
 
     def __getitem__(self, key):
+        with open(self.config_file, 'r') as f:
+            self.config = json.load(f)
         return self.config[key]

@@ -35,6 +35,10 @@
         {
             "name": "termthemebasic",
             "url": "https://raw.githubusercontent.com/DylanBruner/TermProject/master/plugins/official/termthemebasic.py"
+        },
+        {
+            "name": "cmdaliases",
+            "url": "https://raw.githubusercontent.com/DylanBruner/TermProject/master/plugins/official/cmdaliases.py"
         }
     ]
 }
