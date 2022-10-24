@@ -82,7 +82,8 @@ class PluginStore(object):
         
         plugin = plugins[selection-1]
         print(f"1. Uninstall {plugin}")
-        print("2. Exit")
+        print(f"2. Disable {plugin}")
+        print("3. Exit")
 
         choice = input("Option: ")
         if choice == "1":
@@ -90,6 +91,9 @@ class PluginStore(object):
             os.remove(f"{terminal.install_path}/plugins/{plugin}")
             print(f"Uninstalled {plugin}")
         elif choice == "2":
+            terminal.get_plugin('pluginapi.py').unload_plugin(plugin, terminal)
+            os.rename(f"{terminal.install_path}/plugins/{plugin}", f"{terminal.install_path}/plugins/{plugin}.dis")
+        elif choice == "3":
             return
 
     def search(self, terminal: Terminal):
