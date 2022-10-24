@@ -1,4 +1,4 @@
-import importlib, os, base64, colorama
+import importlib, os, base64, colorama, requests, shutil
 from hooks import hooks as _hooks
 from terminal import Terminal
 from utilites import generateHelpMenu
@@ -31,6 +31,7 @@ class DevUtils(object):
 
     @commands.requestTerminalRefrence
     def update(self, data: str, terminal: Terminal):
+        print(('='*10)+'[Updating Plugins]'+('='*10))
         plugin_store: PluginStore = terminal.get_plugin('pluginstore.py')
         plugin_names = [plugin_name['name'] for plugin_name in plugin_store.manifest_cache['plugins'] if plugin_name != '']
         
@@ -39,11 +40,31 @@ class DevUtils(object):
                 for plugin_data in plugin_store.manifest_cache['plugins']:
                     if plugin_data['name'] == plugin.split('.py')[0]:
                         try:
-                            plugin_store.installPluginFromUrl(plugin_data, terminal, False)
+                            #plugin_store.installPluginFromUrl(plugin_data, terminal, False)
                             print(f"{colorama.Fore.GREEN}Updated {plugin_data['name']}{colorama.Fore.RESET}")
                         except Exception as e:
                             print(f"{colorama.Fore.RED}Failed to update {plugin_data['name']}: {e}{colorama.Fore.RESET}")
         self.reload(data, terminal, False)
+
+        print(('='*10)+'[Updating Core]'+('='*10))
+        if not os.path.exists(terminal.install_path+'/tmp'):
+            os.mkdir(terminal.install_path+'/tmp')
+            print('Downloading update...')
+            r = requests.get('https://github.com/DylanBruner/TermProject/archive/refs/heads/master.zip')
+            with open(terminal.install_path+'/tmp/update.zip', 'wb') as f:
+                f.write(r.content)
+            print('Extracting update...')
+            shutil.unpack_archive(terminal.install_path+'/tmp/update.zip', terminal.install_path+'/tmp')
+            print('Copying files...')
+            for file in os.listdir(terminal.install_path+'/tmp/TermProject-master/termproject/plugins'):
+                shutil.copyfile(terminal.install_path+'/tmp/TermProject-master/termproject/plugins/'+file, terminal.install_path+'/termproject/plugins/'+file)
+            #Copy all .py files in tmp/TermProject-master/termproject to termproject
+            for file in os.listdir(terminal.install_path+'/tmp/TermProject-master/termproject'):
+                if file.endswith('.py'):
+                    shutil.copyfile(terminal.install_path+'/tmp/TermProject-master/termproject/'+file, terminal.install_path+'/termproject/'+file)
+            print("Cleaning up...")
+            shutil.rmtree(terminal.install_path+'/tmp')
+            print("Update complete!")
 
     @commands.requestTerminalRefrence
     def inject(self, data: dict, terminal: Terminal):
