@@ -13,9 +13,14 @@ class Input(object):
         if len(files) > 0:
             return files[0]
         return None
+    
+    def clear_line(self):
+        #Get terminal size
+        term_size = os.get_terminal_size()
+        sys.stdout.write('\r' + ' ' * (term_size.columns-1) + '\r')
 
     def reprint_with_cursor(self, input: str, cursor_pos: int):
-        sys.stdout.write('\r' + ' ' * (len(input) + 2) + '\r')
+        self.clear_line()
         sys.stdout.flush()
         sys.stdout.write('\r')
         sys.stdout.write(input)
